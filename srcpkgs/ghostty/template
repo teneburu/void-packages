@@ -1,6 +1,6 @@
 # Template file for 'ghostty'
 pkgname=ghostty
-version=1.1.3
+version=1.3.0
 revision=1
 build_style=zig-build
 configure_args="
@@ -14,11 +14,12 @@ hostmakedepends="pkg-config glib-devel pandoc"
 makedepends="fontconfig-devel freetype-devel harfbuzz-devel gtk4-devel libadwaita-devel"
 depends="ghostty-terminfo-${version}_${revision}"
 short_desc="Fast and feature-rich terminal emulator that uses GPU acceleration"
-maintainer="Duncaen <duncaen@voidlinux.org>"
+maintainer="teneburu <teneburu@proton.me"
 license="MIT"
 homepage="https://ghostty.org/"
-distfiles="https://github.com/ghostty-org/ghostty/archive/refs/tags/v${version}.tar.gz"
-checksum=66c596ed7679d9f7b3ff84fcc019b3a3754ca97a7b7857e5b26d67c80e6e2b95
+distfiles="https://github.com/ghostty-org/ghostty/releases/download/tip/ghostty-source.tar.gz"
+checksum=9b8d97a74f9b2bf695a9e262c38d2a3aaf90d4935fb8dbe7b31698ce2c952209
+
 
 case "${XBPS_TARGET_MACHINE}" in
 	armv*) broken="src/apprt/gtk/cgroup.zig:70:14: error: expected type 'usize', found 'u64'" ;;

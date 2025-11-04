@@ -22,19 +22,19 @@ _EOF
 		configure_args+=" -DCMAKE_TOOLCHAIN_FILE=bootstrap.cmake"
 	elif [ "$CROSS_BUILD" ]; then
 		case "$XBPS_TARGET_MACHINE" in
-			x86_64*) _CMAKE_SYSTEM_PROCESSOR=x86_64 ;;
-			i686*) _CMAKE_SYSTEM_PROCESSOR=x86 ;;
-			aarch64*) _CMAKE_SYSTEM_PROCESSOR=aarch64 ;;
-			arm*) _CMAKE_SYSTEM_PROCESSOR=arm ;;
-			mips*) _CMAKE_SYSTEM_PROCESSOR=mips ;;
-			ppc64le*) _CMAKE_SYSTEM_PROCESSOR=ppc64le ;;
-			ppc64*) _CMAKE_SYSTEM_PROCESSOR=ppc64 ;;
-			ppcle*) _CMAKE_SYSTEM_PROCESSOR=ppcle ;;
-			ppc*) _CMAKE_SYSTEM_PROCESSOR=ppc ;;
-			riscv64*) _CMAKE_SYSTEM_PROCESSOR=riscv64 ;;
-			*) _CMAKE_SYSTEM_PROCESSOR=generic ;;
+		x86_64*) _CMAKE_SYSTEM_PROCESSOR=x86_64 ;;
+		i686*) _CMAKE_SYSTEM_PROCESSOR=x86 ;;
+		aarch64*) _CMAKE_SYSTEM_PROCESSOR=aarch64 ;;
+		arm*) _CMAKE_SYSTEM_PROCESSOR=arm ;;
+		mips*) _CMAKE_SYSTEM_PROCESSOR=mips ;;
+		ppc64le*) _CMAKE_SYSTEM_PROCESSOR=ppc64le ;;
+		ppc64*) _CMAKE_SYSTEM_PROCESSOR=ppc64 ;;
+		ppcle*) _CMAKE_SYSTEM_PROCESSOR=ppcle ;;
+		ppc*) _CMAKE_SYSTEM_PROCESSOR=ppc ;;
+		riscv64*) _CMAKE_SYSTEM_PROCESSOR=riscv64 ;;
+		*) _CMAKE_SYSTEM_PROCESSOR=generic ;;
 		esac
-		cat > cross_${XBPS_CROSS_TRIPLET}.cmake <<_EOF
+		cat >cross_${XBPS_CROSS_TRIPLET}.cmake <<_EOF
 SET(CMAKE_SYSTEM_NAME Linux)
 SET(CMAKE_SYSTEM_VERSION 1)
 
@@ -68,7 +68,7 @@ _EOF
 
 	if [[ $build_helper = *"qemu"* ]]; then
 		echo "SET(CMAKE_CROSSCOMPILING_EMULATOR /usr/bin/qemu-${XBPS_TARGET_QEMU_MACHINE}-static)" \
-			>> cross_${XBPS_CROSS_TRIPLET}.cmake
+			>>cross_${XBPS_CROSS_TRIPLET}.cmake
 	fi
 
 	cmake_args+=" -DCMAKE_INSTALL_SBINDIR:PATH=bin"
@@ -104,25 +104,25 @@ do_check() {
 
 	if [ -z "$make_check_target" ]; then
 		case $make_cmd in
-			make)
-				if make -q test 2>/dev/null; then
-					:
-				else
-					if [ $? -eq 2 ]; then
-						msg_warn 'No target to "make test".\n'
-						return 0
-					fi
-				fi
-				;;
-			ninja)
-				if ! ninja -t query test >/dev/null 2>&1; then
-					msg_warn 'No target to "ninja test".\n'
+		make)
+			if make -q test 2>/dev/null; then
+				:
+			else
+				if [ $? -eq 2 ]; then
+					msg_warn 'No target to "make test".\n'
 					return 0
 				fi
-				;;
-			*)
-				msg_warn "Can't run tests with '$make_cmd', define do_check.\n"
-				;;
+			fi
+			;;
+		ninja)
+			if ! ninja -t query test >/dev/null 2>&1; then
+				msg_warn 'No target to "ninja test".\n'
+				return 0
+			fi
+			;;
+		*)
+			msg_warn "Can't run tests with '$make_cmd', define do_check.\n"
+			;;
 		esac
 	fi
 
