@@ -1,6 +1,6 @@
 # Template file for 'layer-shell-qt'
 pkgname=layer-shell-qt
-version=6.4.5
+version=6.5.1
 revision=2
 build_style=cmake
 configure_args="-DKDE_INSTALL_QMLDIR=lib/qt6/qml

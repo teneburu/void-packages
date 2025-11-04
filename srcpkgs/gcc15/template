@@ -1,0 +1,67 @@
+pkgname=gcc15
+version=15.2.0
+revision=1
+build_style=gnu-configure
+short_desc="GNU Compiler Collection version 15 (C and C++ compiler)"
+homepage="https://gcc.gnu.org/"
+license="GPL-3.0-or-later AND GCC-Runtime-Library-Exception-3.1"
+
+distfiles="https://mirror.koddos.net/gcc/releases/gcc-${version}/gcc-${version}.tar.xz"
+checksum=438fd996826b0c82485a29da03a72d71d6e3541a83ec702df4271f6fe025d24e
+
+hostmakedepends="wget tar"
+makedepends="
+  gmp-devel
+  mpfr-devel
+  libmpc-devel
+  isl-devel
+  libzstd-devel
+  flex
+  bison
+  texinfo
+  python3-devel
+"
+
+configure_args="\
+  --prefix=/usr/local/gcc-${version} \
+  --enable-languages=c,c++ \
+  --disable-multilib \
+  --program-suffix=-15 \
+"
+
+post_extract() {
+  cd ${wrksrc}
+  ./contrib/download_prerequisites
+}
+
+do_configure() {
+  cd ${wrksrc}
+  ./configure ${configure_args}
+}
+
+do_build() {
+  cd ${wrksrc}
+  make -j ${makejobs}
+}
+
+do_install() {
+	cd ${wrksrc}
+  make DESTDIR=${DESTDIR} install
+}
+
+# Sub-package for runtime library (libstdc++) can be declared here
+subpackages="libstdc++15"
+
+libstdc++15_package() {
+  pkgname=libstdc++15
+  version=${version}
+  revision=${revision}
+  short_desc="GNU libstdc++ runtime library version 15"
+  depends="gcc15>=${version}_${revision}"
+  pkg_install() {
+    # Move only the libstdc++ part into this package
+    vinstall usr/lib*/libstdc++.so.* usr/lib
+    # Optionally install any associated headers or symlinks
+  }
+}
+
